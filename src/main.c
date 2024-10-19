@@ -70,7 +70,7 @@ int main(void) {
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
   // TODO: Add SPI initialization code
-  initSPI(3,0,1);
+  initSPI(3,0,1); // 8-bit width
 
   while(1) {
     /* Wait for ESP8266 to send a request.
@@ -91,9 +91,12 @@ int main(void) {
 
     // TODO: Add SPI code here for reading temperature
     digitalWrite(PA8, 1);
-    spiSendReceive(0x80);
+    writeRes(8);
     digitalWrite(PA8, 0);
-
+    
+    digitalWrite(PA8, 1);
+    readTemp(8);
+    digitalWrite(PA8, 0);
   
     // Update string with current LED state
   
