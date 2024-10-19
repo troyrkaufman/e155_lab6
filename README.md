@@ -1,0 +1,1 @@
+The MCU communicates with a DS1722 temperature sensor over SPI. This information is then displayed on a server hosted by ESP8266 network. The server and MCU communicate over USART to update the webpage.
