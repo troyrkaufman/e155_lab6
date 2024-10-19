@@ -63,6 +63,12 @@ int main(void) {
   pinMode(PB5, GPIO_ALT);    // SDO
   pinMode(PA11, GPIO_ALT);   // SDI
   pinMode(PA8, GPIO_OUTPUT); // CE
+
+  // Give SPI pins proper ALT functinos
+  GPIOA->AFRL |= (0b0101<<20); // SCK PA5
+  GPIOA->AFRL |= (0b0101<<20); // SDO PB5
+  GPIOB->AFRH |= (0b0101<<12); // SDI PA11
+
   
   RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
   initTIM(TIM15);
@@ -93,7 +99,7 @@ int main(void) {
     digitalWrite(PA8, 1);
     writeRes(8);
     digitalWrite(PA8, 0);
-    
+
     digitalWrite(PA8, 1);
     readTemp(8);
     digitalWrite(PA8, 0);

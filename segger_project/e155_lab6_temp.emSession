@@ -58,12 +58,11 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="25" y="97" useTextEdit="1" path="../src/main.c" left="0" selected="1" top="64" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="33" y="19" useTextEdit="1" path="../src/main.c" left="0" top="50" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="9" useTextEdit="1" path="../src/main.h" left="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="70" y="14" useTextEdit="1" path="../../library/STM32L432KC_SPI.c" left="0" top="4" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="30" y="25" useTextEdit="1" path="../../library/STM32L432KC_SPI.c" left="0" top="6" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="86" y="4" useTextEdit="1" path="../../library/STM32L432KC_SPI.h" left="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="87" y="10864" useTextEdit="1" path="STM32L4xx/Device/Include/stm32l432xx.h" left="0" top="10845" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="840" useTextEdit="1" path="C:/Program Files/SEGGER/SEGGER Embedded Studio 8.16a/include/__SEGGER_RTL_Arm_Conf.h" left="0" top="824" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="48" y="7876" useTextEdit="1" path="STM32L4xx/Device/Include/stm32l432xx.h" left="0" selected="1" top="7865" codecName="Default"/>
  </Files>
  <EMStudioWindow activeProject="e155_lab6_temp" fileDialogDefaultFilter="*" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="C:/Users/troyk/hmc-e155-labs/library" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

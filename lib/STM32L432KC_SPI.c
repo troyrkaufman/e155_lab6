@@ -10,7 +10,7 @@ void initSPI(int br, int cpol, int cpha){
     
     // Turn on SPI clock domain
     RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
-    // Set clock rate using baud divisor
+    // Set clock rate using baud divisor. Clock will now run at 2.5 MHz
     SPI1->CR1 |= (br<<3);
     // Set CPOL and CPHA to match slave. We need CHPA to be 1 FIX THIS
     SPI1->CR1 |= (cpol<<1) | (cpha<<0);
@@ -29,19 +29,18 @@ void initSPI(int br, int cpol, int cpha){
 }
 
 char spiSendReceive(char send){
-    // As long as the TXFIFO level is less than half its capacity, send txdata
-    while(!(SPI1->SR & SPI_SR_FTLVL_1)){ //or is it SPI_SR_TXE?
-        SPI1->DR = send;
-    }
+    // Wait until the TXFIFO level is less than half of its capacity to send data
+    while(!(SPI1->SR & SPI_SR_TXE)); 
+    
+    // Send byte once, however, we run into a slight problem since we set our bit width to 8 bits in SPI
+    // 1) First capture address of the 16 bit DR
+    // 2) Cast this 16 bit value as a volatile 8 bit integer pointer
+    // 3) Then dereference this value
+    *((volatile uint8_t *) &SPI1->DR) = send;             
 
-    char rxdata;
-    while(1){                           // or while (!(SPI1->SR & SPI_SR_RXNE))
-        // Read data once
-        rxdata = SPI1->DR;
-        // If RXFIFO buffer is not empty
-        if (SPI1->SR & SPI_SR_RXNE){
-            return rxdata;
-        }
-    } 
+    // Wait until there is data in the RXFIFO
+    while((!(SPI1->SR & SPI_SR_RXNE)));
+    
+    // Read byte once
+    return SPI1->DR;
 }
-
