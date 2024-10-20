@@ -65,10 +65,9 @@ int main(void) {
   pinMode(PA8, GPIO_OUTPUT); // CE
 
   // Give SPI pins proper ALT functinos
-  GPIOA->AFRL |= (0b0101<<20); // SCK PA5
-  GPIOA->AFRL |= (0b0101<<20); // SDO PB5
-  GPIOB->AFRH |= (0b0101<<12); // SDI PA11
-
+  GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5); // SCK PA5
+  GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5); // SDO PB5
+  GPIOA->AFR[1] |= _VAL2FLD(GPIO_AFRH_AFSEL11, 5); // SDI PA11
   
   RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
   initTIM(TIM15);
@@ -76,14 +75,14 @@ int main(void) {
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
   // TODO: Add SPI initialization code
-  initSPI(3,0,1); // 8-bit width
+  initSPI(7,0,1); // 8-bit width
 
   while(1) {
     /* Wait for ESP8266 to send a request.
     Requests take the form of '/REQ:<tag>\n', with TAG begin <= 10 characters.
     Therefore the request[] array must be able to contain 18 characters.
     */
-
+/*
     // Receive web request from the ESP
     char request[BUFF_LEN] = "                  "; // initialize to known value
     int charIndex = 0;
@@ -94,18 +93,18 @@ int main(void) {
       while(!(USART->ISR & USART_ISR_RXNE));
       request[charIndex++] = readChar(USART);
     }
-
+*/
     // TODO: Add SPI code here for reading temperature
     digitalWrite(PA8, 1);
-    writeRes(8);
+    writeRes(12);
     digitalWrite(PA8, 0);
 
     digitalWrite(PA8, 1);
-    readTemp(8);
+    readTemp(12);
     digitalWrite(PA8, 0);
   
     // Update string with current LED state
-  
+  /*
     int led_status = updateLEDStatus(request);
 
     char ledStatusStr[20];
@@ -127,5 +126,6 @@ int main(void) {
 
   
     sendString(USART, webpageEnd);
+    */
   }
 }

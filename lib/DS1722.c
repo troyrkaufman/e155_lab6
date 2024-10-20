@@ -51,7 +51,7 @@ int16_t readTemp(int resolution){
             return 0;
     }
 
-    if (temp & (1 << resolution - 1)){  // Checks if MSB is 1. If so, sign extend with 1s
+    if (temp & (1 << (resolution - 1))){  // Checks if MSB is 1. If so, sign extend with 1s
         temp |= ~((1<<resolution) - 1); // First set bit in MSB according to resolution, then sets lower bits get set to 1, then all bit are inverted
     }
 
@@ -59,7 +59,7 @@ int16_t readTemp(int resolution){
 }
 
 void writeRes(int resolution){
-    uint8_t data = 0xf0;
+    uint8_t data = 0xe0;
 
     switch(resolution){
         case 8: break;
@@ -67,7 +67,7 @@ void writeRes(int resolution){
         case 10: data |= (0b010<<1); break;
         case 11: data |= (0b011<<1); break;
         case 12: data |= (0b111<<1); break;
-        default: return 0;
+        default: data = 0;
     }
 
     spiSendReceive(0x80); // Write to configuration register setup
