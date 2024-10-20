@@ -63,6 +63,12 @@ int main(void) {
   pinMode(PB5, GPIO_ALT);    // SDO
   pinMode(PA11, GPIO_ALT);   // SDI
   pinMode(PA8, GPIO_OUTPUT); // CE
+
+  // Give SPI pins proper ALT functinos
+  GPIOA->AFRL |= (0b0101<<20); // SCK PA5
+  GPIOA->AFRL |= (0b0101<<20); // SDO PB5
+  GPIOB->AFRH |= (0b0101<<12); // SDI PA11
+
   
   RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
   initTIM(TIM15);
@@ -70,7 +76,7 @@ int main(void) {
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
   // TODO: Add SPI initialization code
-  initSPI(3,0,1);
+  initSPI(3,0,1); // 8-bit width
 
   while(1) {
     /* Wait for ESP8266 to send a request.
@@ -91,9 +97,12 @@ int main(void) {
 
     // TODO: Add SPI code here for reading temperature
     digitalWrite(PA8, 1);
-    spiSendReceive(0x80);
+    writeRes(8);
     digitalWrite(PA8, 0);
 
+    digitalWrite(PA8, 1);
+    readTemp(8);
+    digitalWrite(PA8, 0);
   
     // Update string with current LED state
   
