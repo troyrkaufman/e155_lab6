@@ -19,6 +19,7 @@ int16_t readTemp(int resolution){
     uint8_t hiByte = 0;
     uint8_t loByte = 0;
 
+    /*
     if (resolution <= 8){
         spiSendReceive(0x02);          // Access Temperature MSB
         temp = spiSendReceive(0x00);   // Wait sometime to retrieve data. 
@@ -27,8 +28,13 @@ int16_t readTemp(int resolution){
         hiByte = spiSendReceive(0x00); // Wait sometime to retrieve data
         spiSendReceive(0x01);          // Access Temperature LSB 
         loByte = spiSendReceive(0x00); // Wait sometime to retrieve data
-
     }
+    */
+    spiSendReceive(0x02);          // Access Temperature MSB 
+    hiByte = spiSendReceive(0x00); // Wait sometime to retrieve data
+    spiSendReceive(0x01);          // Access Temperature LSB 
+    loByte = spiSendReceive(0x00); // Wait sometime to retrieve data
+
     int16_t data = (hiByte<<8) | loByte;   // Creates 16 bit piece of data representing temperature at requested resolution
 
     switch(resolution){
@@ -51,9 +57,10 @@ int16_t readTemp(int resolution){
             return 0;
     }
 
-    if (temp & (1 << (resolution - 1))){  // Checks if MSB is 1. If so, sign extend with 1s
-        temp |= ~((1<<resolution) - 1); // First set bit in MSB according to resolution, then sets lower bits get set to 1, then all bit are inverted
-    }
+
+   // if (temp & (1 << (resolution - 1))){  // Checks if MSB is 1. If so, sign extend with 1s
+    //    temp |= ~((1<<resolution) - 1); // First set bit in MSB according to resolution, then sets lower bits get set to 1, then all bit are inverted
+    //}
 
     return (float)temp;
 }

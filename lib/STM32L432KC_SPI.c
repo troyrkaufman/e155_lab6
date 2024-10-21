@@ -12,8 +12,8 @@ void initSPI(int br, int cpol, int cpha){
     RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
     // Set clock rate using baud divisor. Clock will now run at 2.5 MHz
     //SPI1->CR1 = 0;
-    SPI1->CR1 &= ~_VAL2FLD(SPI_CR1_BR, 0b111);
-    SPI1->CR1 |= _VAL2FLD(SPI_CR1_BR, 0b111);
+    SPI1->CR1 &= ~_VAL2FLD(SPI_CR1_BR, br);
+    SPI1->CR1 |= _VAL2FLD(SPI_CR1_BR, br);
     // Set CPOL and CPHA to match slave. We need CHPA to be 1 FIX THIS
     //SPI1->CR1 |= (cpol<<1) | (cpha<<0);
     SPI1->CR1 |= _VAL2FLD(SPI_CR1_CPOL, cpol);
