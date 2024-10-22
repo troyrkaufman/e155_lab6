@@ -72,6 +72,24 @@ char spiSendReceive(char send){
     // 1) First capture address of the 16 bit DR
     // 2) Cast this 16 bit value as a volatile 8 bit integer pointer
     // 3) Then dereference this value
+    volatile uint8_t* dr = (volatile uint8_t*)&SPI1->DR;
+    *dr = send;          
+
+    // Wait until there is data in the RXFIFO
+    while((!(SPI1->SR & SPI_SR_RXNE)));
+    
+    // Read byte once
+    return *dr;
+}
+/*
+char spiSendReceive(char send){
+    // Wait until the TXFIFO level is less than half of its capacity to send data
+    while(!(SPI1->SR & SPI_SR_TXE)); 
+    
+    // Send byte once, however, we run into a slight problem since we set our bit width to 8 bits in SPI
+    // 1) First capture address of the 16 bit DR
+    // 2) Cast this 16 bit value as a volatile 8 bit integer pointer
+    // 3) Then dereference this value
     *((volatile uint8_t *) &SPI1->DR) = send;             
 
     // Wait until there is data in the RXFIFO
@@ -80,3 +98,4 @@ char spiSendReceive(char send){
     // Read byte once
     return SPI1->DR;
 }
+*/

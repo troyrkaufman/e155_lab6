@@ -73,13 +73,19 @@ int main(void) {
   while(1) {
 
     digitalWrite(PA8, 0b1);
+    //for(volatile int i = 0; i < 1000; i++);
     spiSendReceive(0x80); // Write to configuration register setup
+    //for(volatile int i = 0; i < 100000; i++);
     spiSendReceive(0b11100000); // Write data
     digitalWrite(PA8, 0b0);
 
+    //for(volatile int i = 0; i < 100000; i++);
     digitalWrite(PA8, 0b1);
-    spiSendReceive(0x00);          // Access Temperature MSB 
+    //for(volatile int i = 0; i < 1000; i++);
+    spiSendReceive(0x02);          // Access Temperature MSB 
+    //for(volatile int i = 0; i < 1000; i++);
     hiByte = spiSendReceive(0x00); // Wait sometime to retrieve data
+    //for(volatile int i = 0; i < 1000; i++);
     digitalWrite(PA8, 0b0);
   }
 }
