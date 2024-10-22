@@ -58,19 +58,14 @@ int updateRESStatus(char request[])
 	int res_status = 0;
 	// The request has been received. now process to determine which temperature resolution will be shown
 	if (inString(request, "res8")==1) {
-		digitalWrite(LED_PIN, PIO_LOW);
 		res_status = 8;
 	} else if (inString(request, "res9")==1) {
-		digitalWrite(LED_PIN, PIO_LOW);
 		res_status = 9;
         } else if (inString(request, "res10")==1) {
-		digitalWrite(LED_PIN, PIO_LOW);
 		res_status = 10;
 	} else if (inString(request, "res11")==1) {
-		digitalWrite(LED_PIN, PIO_HIGH);
-		res_status = 11;
+        		res_status = 11;
 	} else if (inString(request, "res12")==1) {
-		digitalWrite(LED_PIN, PIO_HIGH);
 		res_status = 12;
         }
 	return res_status;
@@ -90,14 +85,16 @@ int main(void) {
 
   // Designate the SPI pins
   pinMode(PA5, GPIO_ALT);    // SCK
-  pinMode(PB5, GPIO_ALT);    // SDO
-  pinMode(PA11, GPIO_ALT);   // SDI
+  pinMode(PB5, GPIO_ALT);    // SDI
+  pinMode(PA6, GPIO_ALT);    // SDO
   pinMode(PA8, GPIO_OUTPUT); // CE
+  pinMode(PB3, GPIO_OUTPUT); // LED
+
 
   // Give SPI pins proper ALT functinos
   GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5); // SCK PA5
-  GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5); // SDO PB5
-  GPIOA->AFR[1] |= _VAL2FLD(GPIO_AFRH_AFSEL11, 5); // SDI PA11
+  GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5); // SDI PB5
+  GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL6, 5); // SDO PA6
   
   RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
   initTIM(TIM15);
@@ -105,14 +102,14 @@ int main(void) {
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
   // TODO: Add SPI initialization code
-  initSPI(4,0,1); // 8-bit width
+  initSPI(7,0,1); // 8-bit width
 
   while(1) {
     /* Wait for ESP8266 to send a request.
     Requests take the form of '/REQ:<tag>\n', with TAG begin <= 10 characters.
     Therefore the request[] array must be able to contain 18 characters.
     */
-/*
+
     // Receive web request from the ESP
     char request[BUFF_LEN] = "                  "; // initialize to known value
     int charIndex = 0;
@@ -123,37 +120,33 @@ int main(void) {
       while(!(USART->ISR & USART_ISR_RXNE));
       request[charIndex++] = readChar(USART);
     }
-  */
+  
     // Update string with current LED state
-    //int led_status = updateLEDStatus(request);
+    int led_status = updateLEDStatus(request);
 
     // Update string with current RESOLUTION state
-   // float res_status = updateRESStatus(request);
+    int res_status = updateRESStatus(request);
 
-    float temperature;
+    char temperature;
 
     // TODO: Add SPI code here for reading temperature
     digitalWrite(PA8, 1);
-    //writeRes(res_status);
-    writeRes(8);
+    writeRes(res_status);
+    //writeRes(12);
     digitalWrite(PA8, 0);
 
     digitalWrite(PA8, 1);
-    readTemp(8);
-    //temperature = readTemp(res_status);
+    //readTemp(12);
+    temperature = readTemp(res_status);
     digitalWrite(PA8, 0);
 
-    /*
+    
     char ledStatusStr[20];
     if (led_status == 1)
       sprintf(ledStatusStr,"LED is on!");
     else if (led_status == 0)
       sprintf(ledStatusStr,"LED is off!");
-    */
-    
 
-    
-/*
     // finally, transmit the webpage over UART
     sendString(USART, webpageStart); // webpage header code
     sendString(USART, ledStr); // button for controlling LED
@@ -164,8 +157,8 @@ int main(void) {
     sendString(USART, "<p>");
     sendString(USART, ledStatusStr);
     sendString(USART, "</p>");
-    */
-/*
+    
+
     sendString(USART, webpageStart);
     sendString(USART, "<p>");
     sendString(USART, "Temperature: ");
@@ -174,6 +167,5 @@ int main(void) {
 
   
     sendString(USART, webpageEnd);
-    */
   }
 }
