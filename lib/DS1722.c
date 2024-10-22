@@ -5,6 +5,7 @@
 // Description: This C file creates the 2s complement to decimal calculation 
 
 #include "DS1722.h"
+#include "STM32L432KC.h"
 
 /*
     Configuration status register setup*
@@ -20,10 +21,10 @@ int16_t readTemp(int resolution){ //Faulty
     uint8_t hiByte = 0;
     uint8_t loByte = 0;
 
-    /* 
+    /*
     if (resolution <= 8){
         spiSendReceive(0x02);          // Access Temperature MSB
-        temp = spiSendReceive(0x00);   // Wait sometime to retrieve data. 
+        binary = spiSendReceive(0x00);   // Wait sometime to retrieve data. 
     } else {
         spiSendReceive(0x02);          // Access Temperature MSB 
         hiByte = spiSendReceive(0x00); // Wait sometime to retrieve data
@@ -32,9 +33,17 @@ int16_t readTemp(int resolution){ //Faulty
     }
     */
     spiSendReceive(0x02);          // Access Temperature MSB 
+    //digitalWrite(PA8, 0);
+    //digitalWrite(PA8, 1);
     hiByte = spiSendReceive(0x00); // Wait sometime to retrieve data
+    digitalWrite(PA8, 0);
+    digitalWrite(PA8, 1);
     spiSendReceive(0x01);          // Access Temperature LSB 
+    //digitalWrite(PA8, 0);
+    //digitalWrite(PA8, 1);
     loByte = spiSendReceive(0x00); // Wait sometime to retrieve data
+    //digitalWrite(PA8, 0);
+    //digitalWrite(PA8, 1);
 
     int16_t data = (hiByte<<8) | loByte;   // Creates 16 bit piece of data representing temperature at requested resolution
 
@@ -58,7 +67,7 @@ int16_t readTemp(int resolution){ //Faulty
             return 0;
     }
 
-    if (binary & (1 << (resolution - 1))) { //Convert neagtive 2s comeplement number to the proper interger value
+    if (binary & (1 << (resolution - 1))) { // Convert negative 2s comeplement number to the proper interger value
         binary = ~binary;
         binary += 1;
         decimal = -binary;
@@ -66,10 +75,10 @@ int16_t readTemp(int resolution){ //Faulty
         decimal = binary;
     }
 
-    return (float)decimal;
+    return decimal;
 }
 
-void writeRes(int resolution){ //writing address and data to sensor works as expected
+void writeRes(int resolution){ // Writing address and data to sensor works as expected
     uint8_t data = 0xe0;
 
     switch(resolution){
@@ -82,6 +91,8 @@ void writeRes(int resolution){ //writing address and data to sensor works as exp
     }
 
     spiSendReceive(0x80); // Write to configuration register setup
+    //digitalWrite(PA8, 0);
+    //digitalWrite(PA8, 1);
     spiSendReceive(data); // Write data
 }
 

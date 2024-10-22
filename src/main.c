@@ -84,6 +84,10 @@ int main(void) {
   configureFlash();
   configureClock();
 
+  RCC -> CFGR |= (0b1001 << 4); // PLL is divided by 4 from the AHB PRESC in clock tree (to get to 20MHz)
+  RCC -> CFGR |= (0b000 << 8);  // PLL (formerly SYSCLK)is not divided by APB1 PRESC (Setting this to 0b0xx avoids 2x multiplier)
+
+
   gpioEnable(GPIO_PORT_A);
   gpioEnable(GPIO_PORT_B);
   gpioEnable(GPIO_PORT_C);
@@ -91,13 +95,15 @@ int main(void) {
   // Designate the SPI pins
   pinMode(PA5, GPIO_ALT);    // SCK
   pinMode(PB5, GPIO_ALT);    // SDO
-  pinMode(PA11, GPIO_ALT);   // SDI
+  //pinMode(PA11, GPIO_ALT);   // SDI
+  pinMode(PA6, GPIO_ALT);   // SDI
   pinMode(PA8, GPIO_OUTPUT); // CE
 
   // Give SPI pins proper ALT functinos
   GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5); // SCK PA5
   GPIOB->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL5, 5); // SDO PB5
-  GPIOA->AFR[1] |= _VAL2FLD(GPIO_AFRH_AFSEL11, 5); // SDI PA11
+  //GPIOA->AFR[1] |= _VAL2FLD(GPIO_AFRH_AFSEL11, 5); // SDI PA11
+  GPIOA->AFR[0] |= _VAL2FLD(GPIO_AFRL_AFSEL6, 5); // SDI PA6
   
   RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
   initTIM(TIM15);
@@ -105,7 +111,7 @@ int main(void) {
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
   // TODO: Add SPI initialization code
-  initSPI(4,0,1); // 8-bit width
+  initSPI(7,0,1); // 8-bit width
 
   while(1) {
     /* Wait for ESP8266 to send a request.
@@ -134,7 +140,7 @@ int main(void) {
 
     // TODO: Add SPI code here for reading temperature
     digitalWrite(PA8, 1);
-    //writeRes(res_status);
+    ////writeRes(res_status);
     writeRes(8);
     digitalWrite(PA8, 0);
 
@@ -166,7 +172,8 @@ int main(void) {
     sendString(USART, "</p>");
     */
 /*
-    sendString(USART, webpageStart);
+    sendString(USART, resStr); // button for controlling resolution
+    sendString(USART, "<h2>Resolution Status</h2>");
     sendString(USART, "<p>");
     sendString(USART, "Temperature: ");
     sendString(USART, temperature);
