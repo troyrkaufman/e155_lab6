@@ -5,6 +5,8 @@
 // Description: This C file creates the 2s complement to decimal calculation 
 
 #include "DS1722.h"
+//#include "STM32L432KC.h"
+#include "STM32L432KC_SPI.h"
 
 /*
     Configuration status register setup*
@@ -33,6 +35,10 @@ int16_t readTemp(int resolution){ //Faulty
     */
     spiSendReceive(0x02);          // Access Temperature MSB 
     hiByte = spiSendReceive(0x00); // Wait sometime to retrieve data
+
+    //digitalWrite(PA8, 0);
+    //digitalWrite(PA8, 1);
+
     spiSendReceive(0x01);          // Access Temperature LSB 
     loByte = spiSendReceive(0x00); // Wait sometime to retrieve data
 
@@ -58,15 +64,7 @@ int16_t readTemp(int resolution){ //Faulty
             return 0;
     }
 
-    if (binary & (1 << (resolution - 1))) { //Convert neagtive 2s comeplement number to the proper interger value
-        binary = ~binary;
-        binary += 1;
-        decimal = -binary;
-    } else {
-        decimal = binary;
-    }
-
-    return (float)decimal;
+    return binary;
 }
 
 void writeRes(int resolution){ //writing address and data to sensor works as expected

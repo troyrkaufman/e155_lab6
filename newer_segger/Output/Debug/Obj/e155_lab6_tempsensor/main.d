@@ -17,10 +17,11 @@ Output/Debug/Obj/e155_lab6_tempsensor/main.o: \
   C:\Users\troyk\hmc-e155-labs\lab6_tk\newer_segger\CMSIS_5\CMSIS\Core\Include\cmsis_gcc.h \
   C:\Users\troyk\hmc-e155-labs\lab6_tk\newer_segger\CMSIS_5\CMSIS\Core\Include\mpu_armv7.h \
   C:\Users\troyk\hmc-e155-labs\lab6_tk\newer_segger\STM32L4xx\Device\Include\system_stm32l4xx.h \
-  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\STM32L432KC_GPIO.h \
-  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\STM32L432KC_RCC.h \
-  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\STM32L432KC_TIM.h \
-  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\STM32L432KC_FLASH.h \
-  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\STM32L432KC_USART.h \
-  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\STM32L432KC_SPI.h \
-  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\DS1722.h
+  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\..\lib\STM32L432KC_GPIO.h \
+  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\..\lib\STM32L432KC_RCC.h \
+  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\..\lib\STM32L432KC_TIM.h \
+  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\..\lib\STM32L432KC_FLASH.h \
+  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\..\lib\STM32L432KC_USART.h \
+  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\..\lib\STM32L432KC_SPI.h \
+  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\..\lib\DS1722.h \
+  C:\Users\troyk\hmc-e155-labs\lab6_tk\src\..\lib\STM32L432KC_FLASH.h
