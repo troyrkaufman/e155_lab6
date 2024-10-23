@@ -15,9 +15,11 @@
     SD is shutdown mode (0 for continuous values and 1 for one value then on low power)
 */
 
-int16_t readTemp(int resolution){ //Faulty 
-    int16_t binary;
-    int16_t decimal;
+double readTemp(int resolution){  
+    double binary;
+    double decimal;
+    double big;
+    double small;
     uint8_t hiByte = 0;
     uint8_t loByte = 0;
 
@@ -41,7 +43,7 @@ int16_t readTemp(int resolution){ //Faulty
             binary = (data>>6); 
             break;
         case 11:
-            binary = (data>>5); 
+            binary = (data>>5);
             break;
         case 12:
             binary = (data>>4); 
@@ -51,11 +53,11 @@ int16_t readTemp(int resolution){ //Faulty
     }
 
     if (binary & (1 << (resolution - 1))) { //Convert neagtive 2s comeplement number to the proper interger value
-        binary = ~binary;
-        binary += 1;
-        decimal = -binary;
+        binary = ~binary + 1;
+        return -(float)binary; 
     } else {
         decimal = binary;
+        return binary;
     }
 
     return decimal;

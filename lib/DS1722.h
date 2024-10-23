@@ -9,7 +9,7 @@
 #include <stm32l432xx.h>
 #include "STM32L432KC_SPI.h"
 
-int16_t readTemp(int resolution);
+double readTemp(int resolution);
 
 void writeRes(int resolution);
 

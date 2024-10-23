@@ -67,7 +67,10 @@ int updateRESStatus(char request[])
         		res_status = 11;
 	} else if (inString(request, "res12")==1) {
 		res_status = 12;
+        } else {
+                res_status = 8;
         }
+
 	return res_status;
 }
 
@@ -98,6 +101,8 @@ int main(void) {
   
   RCC->APB2ENR |= (RCC_APB2ENR_TIM15EN);
   initTIM(TIM15);
+
+  digitalWrite(PB3, 0);
   
   USART_TypeDef * USART = initUSART(USART1_ID, 125000);
 
@@ -127,17 +132,15 @@ int main(void) {
     // Update string with current RESOLUTION state
     int res_status = updateRESStatus(request);
 
-    char temperature;
+    float temperature;
 
     // TODO: Add SPI code here for reading temperature
     digitalWrite(PA8, 1);
-    writeRes(res_status);
-    //writeRes(12);
+    writeRes(res_status); // change to 8 to see if it works
     digitalWrite(PA8, 0);
 
     digitalWrite(PA8, 1);
-    //readTemp(12);
-    temperature = readTemp(res_status);
+    temperature = readTemp(res_status); //change to 8 to see if it works
     digitalWrite(PA8, 0);
 
     
@@ -147,22 +150,32 @@ int main(void) {
     else if (led_status == 0)
       sprintf(ledStatusStr,"LED is off!");
 
+    char resStatusStr[50];
+    if (res_status == 8) {
+      sprintf(resStatusStr,"Temp: %.0f C", temperature);
+    } else if (res_status == 9) {
+      sprintf(resStatusStr,"Temperature: %.1f C", temperature);
+    } else if (res_status == 10) {
+      sprintf(resStatusStr,"Temperature: %.2f C", temperature);
+    } else if (res_status == 11) {
+      sprintf(resStatusStr,"Temperature: %.3f C", temperature);
+    } else if (res_status == 12) {
+      sprintf(resStatusStr,"Temperature: %.4f C", temperature);
+    }
+
     // finally, transmit the webpage over UART
     sendString(USART, webpageStart); // webpage header code
+
     sendString(USART, ledStr); // button for controlling LED
-
     sendString(USART, "<h2>LED Status</h2>");
-
-
     sendString(USART, "<p>");
     sendString(USART, ledStatusStr);
     sendString(USART, "</p>");
     
-
-    sendString(USART, webpageStart);
+    sendString(USART, resStr); // button for controlling temperature resolution
+    sendString(USART, "<h2>Resolution Status</h2>");
     sendString(USART, "<p>");
-    sendString(USART, "Temperature: ");
-    sendString(USART, temperature);
+    sendString(USART, resStatusStr);
     sendString(USART, "</p>");
 
   
