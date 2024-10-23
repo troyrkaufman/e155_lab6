@@ -68,7 +68,7 @@ int updateRESStatus(char request[])
 	} else if (inString(request, "res12")==1) {
 		res_status = 12;
         } else {
-                res_status = 8;
+                res_status = 9;
         }
 
 	return res_status;
@@ -152,7 +152,7 @@ int main(void) {
 
     char resStatusStr[50];
     if (res_status == 8) {
-      sprintf(resStatusStr,"Temp: %.0f C", temperature);
+      sprintf(resStatusStr,"Temperature: %.0f C", temperature);
     } else if (res_status == 9) {
       sprintf(resStatusStr,"Temperature: %.1f C", temperature);
     } else if (res_status == 10) {

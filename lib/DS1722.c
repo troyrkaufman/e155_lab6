@@ -15,7 +15,7 @@
     SD is shutdown mode (0 for continuous values and 1 for one value then on low power)
 */
 
-double readTemp(int resolution){  
+float readTemp(int resolution){  
     double binary;
     double decimal;
     double big;
@@ -30,37 +30,40 @@ double readTemp(int resolution){
     spiSendReceive(0x01);          // Access Temperature LSB 
     loByte = spiSendReceive(0x00); // Wait sometime to retrieve data
 
+    float temperature;
+
     int16_t data = (hiByte<<8) | loByte;   // Creates 16 bit piece of data representing temperature at requested resolution
 
     switch(resolution){
         case 8: 
             binary = (data>>8);
+            temperature = (float)binary;  // No fractional part
             break;
         case 9:
             binary = (data>>7); 
+            temperature = (float)binary * 0.5;  // Each LSB represents 0.5°C
             break;
         case 10:
             binary = (data>>6); 
+            temperature = (float)binary * 0.25;  // Each LSB represents 0.25°C
             break;
         case 11:
             binary = (data>>5);
+             temperature = (float)binary * 0.125;  // Each LSB represents 0.125°C
             break;
         case 12:
             binary = (data>>4); 
+             temperature = (float)binary * 0.0625;  // Each LSB represents 0.0625°C
             break;
         default: 
             return 0;
     }
 
-    if (binary & (1 << (resolution - 1))) { //Convert neagtive 2s comeplement number to the proper interger value
-        binary = ~binary + 1;
-        return -(float)binary; 
-    } else {
-        decimal = binary;
-        return binary;
+      if ((int16_t)binary & (1 << (resolution - 1))) {
+        temperature = -temperature;
     }
 
-    return decimal;
+    return temperature;
 }
 
 void writeRes(int resolution){ //writing address and data to sensor works as expected
