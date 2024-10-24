@@ -2,7 +2,8 @@
 // Author: Troy Kaufman
 // Email: tkaufman@hmc.edu
 // Date: 10/19/24
-// Description: This C file creates the 2s complement to decimal calculation 
+// Description: This C file parses writing resolution information to configure the DS1722 temperature sensor
+//              in addition to reading and parsing the real temperature data in different resolutions. 
 
 #include "DS1722.h"
 #include "STM32L432KC_GPIO.h"
@@ -37,30 +38,46 @@ float readTemp(int resolution){
     switch(resolution){
         case 8: 
             binary = (data>>8);
-            temperature = (float)binary;  // No fractional part
+            temperature = (float)binary;          // No fractional part
             break;
         case 9:
             binary = (data>>7); 
-            temperature = (float)binary * 0.5;  // Each LSB represents 0.5°C
+            temperature = (float)binary * 0.5;    // Each LSB represents 0.5°C
             break;
         case 10:
             binary = (data>>6); 
-            temperature = (float)binary * 0.25;  // Each LSB represents 0.25°C
+            temperature = (float)binary * 0.25;   // Each LSB represents 0.25°C
             break;
         case 11:
             binary = (data>>5);
-             temperature = (float)binary * 0.125;  // Each LSB represents 0.125°C
+             temperature = (float)binary * 0.125; // Each LSB represents 0.125°C
             break;
         case 12:
             binary = (data>>4); 
-             temperature = (float)binary * 0.0625;  // Each LSB represents 0.0625°C
+             temperature = (float)binary * 0.0625;// Each LSB represents 0.0625°C
             break;
         default: 
             return 0;
     }
 
-      if ((int16_t)binary & (1 << (resolution - 1))) {
-        temperature = -temperature;
+    if ((int16_t)binary & (1 << (resolution - 1))) {
+        //temperature = -temperature;
+         if (resolution == 8) {
+            binary = binary - (1 << resolution);
+            temperature = binary * 1; 
+         } else if (resolution == 9) {
+            binary = binary - (1 << resolution);
+            temperature = binary * 0.5;
+         } else if (resolution == 10) {
+            binary = binary - (1 << resolution);
+            temperature = binary * 0.25;
+         } else if (resolution == 11) {
+            binary = binary - (1 << resolution);
+            temperature = binary * 0.125;
+         } else if (resolution == 12) {
+            binary = binary - (1 << resolution);
+            temperature = binary * 0.0625;
+         }
     }
 
     return temperature;
