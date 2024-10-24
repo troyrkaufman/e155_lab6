@@ -35,52 +35,8 @@ float readTemp(int resolution){
 
     int16_t data = (hiByte<<8) | loByte;   // Creates 16 bit piece of data representing temperature at requested resolution
 
-    switch(resolution){
-        case 8: 
-            binary = (data>>8);
-            temperature = (float)binary;          // No fractional part
-            break;
-        case 9:
-            binary = (data>>7); 
-            temperature = (float)binary * 0.5;    // Each LSB represents 0.5°C
-            break;
-        case 10:
-            binary = (data>>6); 
-            temperature = (float)binary * 0.25;   // Each LSB represents 0.25°C
-            break;
-        case 11:
-            binary = (data>>5);
-             temperature = (float)binary * 0.125; // Each LSB represents 0.125°C
-            break;
-        case 12:
-            binary = (data>>4); 
-             temperature = (float)binary * 0.0625;// Each LSB represents 0.0625°C
-            break;
-        default: 
-            return 0;
-    }
+    return (float)data/256;
 
-    if ((int16_t)binary & (1 << (resolution - 1))) {
-        //temperature = -temperature;
-         if (resolution == 8) {
-            binary = binary - (1 << resolution);
-            temperature = binary * 1; 
-         } else if (resolution == 9) {
-            binary = binary - (1 << resolution);
-            temperature = binary * 0.5;
-         } else if (resolution == 10) {
-            binary = binary - (1 << resolution);
-            temperature = binary * 0.25;
-         } else if (resolution == 11) {
-            binary = binary - (1 << resolution);
-            temperature = binary * 0.125;
-         } else if (resolution == 12) {
-            binary = binary - (1 << resolution);
-            temperature = binary * 0.0625;
-         }
-    }
-
-    return temperature;
 }
 
 void writeRes(int resolution){ //writing address and data to sensor works as expected
